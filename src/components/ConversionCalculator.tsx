@@ -144,15 +144,54 @@ export function ConversionCalculator({ config, theme }: ConversionCalculatorProp
       </div>
 
       {/* Calculator Output Display */}
-      <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200 text-center space-y-1">
-        <span className="text-[10px] uppercase font-bold text-slate-400 tracking-widest block">
-          Calculated Annual Revenue Leak
-        </span>
-        <div className="text-3xl font-extrabold text-blue-600 tracking-tight">
+      <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200 text-center space-y-3">
+        <div className="flex justify-between items-center">
+          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-widest block">
+            Calculated Annual Revenue Leak
+          </span>
+          <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-full uppercase border ${
+            calculatedLeak >= 2000000 
+              ? "bg-rose-50 text-rose-700 border-rose-200" 
+              : calculatedLeak >= 1000000 
+                ? "bg-amber-50 text-amber-700 border-amber-200" 
+                : "bg-blue-50 text-blue-700 border-blue-200"
+          }`}>
+            {calculatedLeak >= 2000000 ? "CRITICAL RISK" : calculatedLeak >= 1000000 ? "MODERATE RISK" : "MINIMUM RISK"}
+          </span>
+        </div>
+
+        <div className={`text-3xl sm:text-4xl font-extrabold tracking-tight transition-colors duration-300 ${
+          calculatedLeak >= 2000000 
+            ? "text-rose-600" 
+            : calculatedLeak >= 1000000 
+              ? "text-amber-500" 
+              : "text-blue-600"
+        }`}>
           ${calculatedLeak.toLocaleString()} <span className="text-sm font-normal text-slate-500">/yr</span>
         </div>
+
+        {/* Real-time visual gauge */}
+        <div className="space-y-1">
+          <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+            <div 
+              className={`h-full rounded-full transition-all duration-300 ${
+                calculatedLeak >= 2000000 
+                  ? "bg-rose-600" 
+                  : calculatedLeak >= 1000000 
+                    ? "bg-amber-500" 
+                    : "bg-blue-600"
+              }`}
+              style={{ width: `${Math.min(100, (calculatedLeak / 4000000) * 100)}%` }}
+            />
+          </div>
+          <div className="flex justify-between text-[8px] text-slate-400 font-mono">
+            <span>$0 LOSS</span>
+            <span>$4M MAX THEORETICAL LEAK</span>
+          </div>
+        </div>
+
         <p className="text-[9px] text-slate-500 uppercase tracking-wide">
-          Estimated leakage based on market search metrics & category averages
+          Estimated leakage based on market search metrics &amp; category averages
         </p>
       </div>
 
@@ -164,7 +203,7 @@ export function ConversionCalculator({ config, theme }: ConversionCalculatorProp
             <div>
               <p className="font-extrabold text-slate-900 uppercase tracking-wide">Audit Request Sourced!</p>
               <p className="mt-1 leading-relaxed text-slate-600">
-                We have registered your audit profile. Our Senior Sales closers are compiling a custom, raw digital channel teardown report for <strong>{brandName}</strong>. Check the Admin Console to view your request status.
+                We have registered your audit profile. Our Senior Sales team is compiling a custom, raw digital channel teardown report for <strong>{brandName}</strong>. We will contact you at your email soon.
               </p>
               <button
                 onClick={() => setSubmitSuccess(false)}
@@ -206,7 +245,7 @@ export function ConversionCalculator({ config, theme }: ConversionCalculatorProp
               </p>
             )}
             <p className="text-[10px] text-slate-400 leading-normal">
-              🛡️ No fake demos here. Submitting this form creates a live client ticket in our applicant tracking Admin Console pipeline above.
+              🛡️ No fake demos here. Submitting this form generates a real-time, live operational ticket for our revenue audit team to review.
             </p>
           </form>
         )}

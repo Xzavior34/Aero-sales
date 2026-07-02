@@ -190,9 +190,12 @@ export default function App() {
             onClick={() => handleNavigate("home")}
             className="flex items-center gap-2.5 cursor-pointer group"
           >
-            <div className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center font-display font-black text-white text-sm shadow-xs transition-transform group-hover:scale-105">
-              A
-            </div>
+            <img 
+              src="/logo.svg" 
+              alt="Aero Sales & Co. Logo" 
+              className="w-8 h-8 rounded-lg shadow-xs transition-transform group-hover:scale-105"
+              referrerPolicy="no-referrer"
+            />
             <div>
               <h1 className="text-xs font-display font-black tracking-[0.2em] text-slate-900 uppercase">
                 AERO SALES OPERATIONS
@@ -663,9 +666,12 @@ export default function App() {
           
           <div className="md:col-span-5 space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 flex items-center justify-center font-display font-black text-sm">
-                A
-              </div>
+            <img 
+              src="/logo.svg" 
+              alt="Aero Sales & Co. Logo" 
+              className="w-8 h-8 rounded-lg shadow-xs"
+              referrerPolicy="no-referrer"
+            />
               <span className="text-sm font-display font-black tracking-widest text-white uppercase">
                 AERO SALES OPERATIONS
               </span>

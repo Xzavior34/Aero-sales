@@ -208,7 +208,7 @@ export function PilotRolesBoard({ theme, isLight, currentStyles, onSignupComplet
                 <Briefcase className="w-8 h-8 text-slate-300 mx-auto" />
                 <p className="text-xs font-mono text-slate-700 font-bold">No active positions match criteria</p>
                 <p className="text-[11px] text-slate-400 leading-normal">
-                  Try clearing your search or add custom roles inside the secure Admin Console at the top of the interface.
+                  Try clearing your search filters, or contact our team to inquire about custom corporate sales structures.
                 </p>
               </div>
             ) : (
@@ -346,7 +346,7 @@ export function PilotRolesBoard({ theme, isLight, currentStyles, onSignupComplet
                   <div className="space-y-1">
                     <h5 className="text-xs font-bold text-slate-800">Application Lodged Successfully</h5>
                     <p className="text-[11px] text-slate-400 leading-relaxed px-2">
-                      Your vetting record is now live in the administrator database workspace above.
+                      Your vetting record is now live in our secure candidate database. Our talent team will review it shortly.
                     </p>
                   </div>
                   <button

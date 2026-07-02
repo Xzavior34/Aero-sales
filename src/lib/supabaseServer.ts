@@ -309,6 +309,39 @@ export async function closeJob(id: string): Promise<boolean> {
   }
 }
 
+// Completely delete a job from the database
+export async function deleteJob(id: string): Promise<boolean> {
+  const client = getSupabaseClient();
+  if (!client) {
+    const db = readLocalDb();
+    const originalCount = db.jobs.length;
+    db.jobs = db.jobs.filter(j => j.id !== id);
+    if (db.jobs.length < originalCount) {
+      writeLocalDb(db.jobs, db.applications);
+      return true;
+    }
+    return false;
+  }
+  try {
+    const { error } = await client
+      .from("jobs")
+      .delete()
+      .eq("id", id);
+    if (error) throw error;
+    return true;
+  } catch (err) {
+    console.error("deleteJob error, using local fallback:", err);
+    const db = readLocalDb();
+    const originalCount = db.jobs.length;
+    db.jobs = db.jobs.filter(j => j.id !== id);
+    if (db.jobs.length < originalCount) {
+      writeLocalDb(db.jobs, db.applications);
+      return true;
+    }
+    return false;
+  }
+}
+
 // Fetch Applications
 export async function fetchApplications(): Promise<Application[]> {
   const client = getSupabaseClient();

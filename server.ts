@@ -8,6 +8,7 @@ import {
   fetchJobs,
   saveJob,
   closeJob,
+  deleteJob,
   fetchApplications,
   submitApplication,
   updateApplicationStatus,
@@ -228,6 +229,21 @@ app.patch("/api/roles/:id", async (req, res) => {
     res.json(saved);
   } catch (error: any) {
     res.status(500).json({ error: "Failed to update job posting" });
+  }
+});
+
+// Delete a role/job completely
+app.delete("/api/roles/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const success = await deleteJob(id);
+    if (success) {
+      res.json({ message: "Job deleted successfully" });
+    } else {
+      res.status(404).json({ error: "Job posting not found" });
+    }
+  } catch (error: any) {
+    res.status(500).json({ error: "Failed to delete job posting" });
   }
 });
 

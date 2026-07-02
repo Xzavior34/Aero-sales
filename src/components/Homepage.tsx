@@ -198,10 +198,10 @@ export function Homepage({ onNavigate }: HomepageProps) {
               {data.features[2].description}
             </p>
             <button 
-              onClick={() => onNavigate("admin")}
+              onClick={() => onNavigate("roster")}
               className="text-[10px] font-mono text-amber-600 font-bold uppercase tracking-wider flex items-center gap-1 hover:underline"
             >
-              Access System Control <ArrowRight className="w-3.5 h-3.5" />
+              Explore Active Placements <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
@@ -325,7 +325,7 @@ export function Homepage({ onNavigate }: HomepageProps) {
               <div>
                 <p className="font-extrabold text-slate-900 uppercase tracking-wide">Audit Requested!</p>
                 <p className="mt-1 leading-relaxed text-slate-600">
-                  Our Sr. Closers are compiling your custom leak teardown report. You can review submissions inside the secure System Admin console.
+                  Our Sr. Closers are compiling your custom leak teardown report. We will reach out to you within 24 hours.
                 </p>
               </div>
             </div>
@@ -350,7 +350,7 @@ export function Homepage({ onNavigate }: HomepageProps) {
               </div>
               {errorMsg && <p className="text-[10px] text-red-600 font-mono text-left">{errorMsg}</p>}
               <p className="text-[10px] text-slate-400 font-mono">
-                🔐 Submitting triggers a live operational ticket in our secure CRM Admin Console.
+                🔐 Submitting triggers a live operational ticket in our secure client pipeline database.
               </p>
             </form>
           )}

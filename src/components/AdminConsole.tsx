@@ -65,6 +65,9 @@ export function AdminConsole({ onRoleAdded }: AdminConsoleProps) {
   const [roleStatus, setRoleStatus] = useState<"active" | "draft">("active");
   const [formSuccess, setFormSuccess] = useState<boolean>(false);
   const [formError, setFormError] = useState<string | null>(null);
+  
+  // Safe two-stage deletion state
+  const [deletingRoleId, setDeletingRoleId] = useState<string | null>(null);
 
   // Fetch all jobs, applications, and Supabase status
   const fetchData = async (isSilent = false) => {
@@ -189,6 +192,25 @@ export function AdminConsole({ onRoleAdded }: AdminConsoleProps) {
       if (onRoleAdded) onRoleAdded();
     } catch (error) {
       console.error("Job status update error:", error);
+    }
+  };
+
+  // Delete a Role completely
+  const handleDeleteRole = async (jobId: string) => {
+    try {
+      const res = await fetch(`/api/roles/${jobId}`, {
+        method: "DELETE"
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to delete role from server.");
+      }
+
+      // Refresh listings
+      await fetchData();
+      if (onRoleAdded) onRoleAdded();
+    } catch (error) {
+      console.error("Job delete error:", error);
     }
   };
 
@@ -604,6 +626,32 @@ export function AdminConsole({ onRoleAdded }: AdminConsoleProps) {
                         className="text-[8.5px] font-mono bg-red-50 border border-red-100 text-red-600 hover:bg-red-100 px-2 py-1 rounded transition-colors"
                       >
                         Close Role
+                      </button>
+                    )}
+                    {deletingRoleId === role.id ? (
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => {
+                            handleDeleteRole(role.id);
+                            setDeletingRoleId(null);
+                          }}
+                          className="text-[8.5px] font-mono bg-red-600 text-white hover:bg-red-700 px-2 py-1 rounded transition-colors font-bold"
+                        >
+                          Confirm Delete
+                        </button>
+                        <button
+                          onClick={() => setDeletingRoleId(null)}
+                          className="text-[8.5px] font-mono bg-slate-200 text-slate-700 hover:bg-slate-300 px-2 py-1 rounded transition-colors"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setDeletingRoleId(role.id)}
+                        className="text-[8.5px] font-mono bg-rose-100 border border-rose-200 text-rose-700 hover:bg-rose-200 px-2 py-1 rounded transition-colors"
+                      >
+                        Delete
                       </button>
                     )}
                   </div>

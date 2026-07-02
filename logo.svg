@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <!-- Metallic Gradients for 3D Look -->
+    <linearGradient id="silver-light" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="60%" stop-color="#DCDCDC" />
+      <stop offset="100%" stop-color="#B0B0B0" />
+    </linearGradient>
+    <linearGradient id="silver-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9E9E9E" />
+      <stop offset="50%" stop-color="#555555" />
+      <stop offset="100%" stop-color="#242424" />
+    </linearGradient>
+    <linearGradient id="silver-mid" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#404040" />
+      <stop offset="100%" stop-color="#CCCCCC" />
+    </linearGradient>
+    <!-- Shadow Gradient -->
+    <linearGradient id="column-shadow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="rgba(0,0,0,0.4)" />
+      <stop offset="100%" stop-color="rgba(0,0,0,0)" />
+    </linearGradient>
+  </defs>
+
+  <!-- Deep dark rounded background (removable/transparent if needed, but matches the branding) -->
+  <rect width="100%" height="100%" rx="20" fill="#0D0D0D" />
+
+  <!-- The Three Geometric Columns Monogram -->
+  <g transform="translate(1, -2)">
+    <!-- COLUMN 1 (Leftmost) -->
+    <!-- Left light side border -->
+    <polygon points="32,78 32,30 36,25 36,78" fill="url(#silver-light)" />
+    <!-- Front/Right shaded side -->
+    <polygon points="36,78 36,25 46,33 46,78" fill="url(#silver-dark)" />
+    
+    <!-- COLUMN 2 (Center) -->
+    <!-- Left light side border -->
+    <polygon points="46,78 46,33 50,23 50,78" fill="url(#silver-light)" />
+    <!-- Front/Right shaded side -->
+    <polygon points="50,78 50,23 60,31 60,78" fill="url(#silver-dark)" />
+    <!-- Center Column Accent Overlay to simulate the inner slant -->
+    <polygon points="50,78 50,38 60,46 60,78" fill="url(#silver-mid)" opacity="0.8" />
+
+    <!-- COLUMN 3 (Rightmost) -->
+    <!-- Left light side border -->
+    <polygon points="60,78 60,31 64,39 64,78" fill="url(#silver-light)" />
+    <!-- Front/Right shaded side -->
+    <polygon points="64,78 64,39 74,47 74,78" fill="url(#silver-dark)" />
+
+    <!-- Subtle Ground Glow -->
+    <ellipse cx="53" cy="79" rx="22" ry="2" fill="#FFFFFF" opacity="0.15" />
+  </g>
+</svg>
