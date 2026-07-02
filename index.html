@@ -3,10 +3,69 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AERO SALES OPERATIONS</title>
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>Aero Pipeline Optimizer &amp; SaaS Conversion Portal</title>
+    <meta name="description" content="An interactive studio for designing, optimizing, and previewing high-end SaaS landing pages. Features modular Job Portals, applicant tracking tables, and a Lead Magnet Revenue Calculator." />
+    <meta name="keywords" content="SaaS, Landing Page Optimizer, RevOps, Outbound, Conversion Rate Optimization, A/B Testing, Lead Magnet Calculator" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://aero-revops.example.com/" />
+    
+    <!-- Progressive Web App (PWA) Meta & Links -->
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="apple-touch-icon" href="/logo.svg" />
+    <link rel="manifest" href="/manifest.json" />
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://aero-revops.example.com/" />
+    <meta property="og:title" content="Aero Pipeline Optimizer &amp; SaaS Conversion Portal" />
+    <meta property="og:description" content="Design, preview, and optimize luxury minimalist SaaS landing pages using dynamic copywriting presets, heatmaps, and a simulated pipeline calculator." />
+    <meta property="og:image" content="/logo.svg" />
+
+    <!-- Twitter Card -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://aero-revops.example.com/" />
+    <meta property="twitter:title" content="Aero Pipeline Optimizer &amp; SaaS Conversion Portal" />
+    <meta property="twitter:description" content="Design, preview, and optimize luxury minimalist SaaS landing pages using dynamic copywriting presets, heatmaps, and a simulated pipeline calculator." />
+    <meta property="twitter:image" content="/logo.svg" />
+
+    <!-- Schema.org JSON-LD Structured Data for Search Engines -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Aero Pipeline Optimizer & SaaS Conversion Portal",
+        "description": "An interactive studio for designing, optimizing, and previewing high-end SaaS landing pages, featuring modular Job Portals and a Lead Magnet Revenue Calculator.",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "All",
+        "offers": {
+          "@type": "Offer",
+          "price": "0.00",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
+
+    <!-- Register Service Worker for PWA Resilience -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => {
+              console.log('Aero PWA ServiceWorker registered with scope: ', reg.scope);
+            })
+            .catch(err => {
+              console.warn('Aero PWA ServiceWorker registration failed: ', err);
+            });
+        });
+      }
+    </script>
   </head>
-  <body>
+  <body class="bg-slate-950 antialiased scrollbar-thin">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

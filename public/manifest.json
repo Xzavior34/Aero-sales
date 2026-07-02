@@ -1,0 +1,24 @@
+{
+  "short_name": "Aero RevOps",
+  "name": "Aero Pipeline Optimizer & SaaS Conversion Portal",
+  "description": "An interactive studio for designing, optimizing, and previewing high-end SaaS landing pages, featuring an integrated modular Job Portal, an authenticated admin applicant tracking table, and a Lead Magnet Revenue Calculator.",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192 512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#090d16",
+  "theme_color": "#0f172a",
+  "display": "standalone",
+  "orientation": "portrait"
+}
