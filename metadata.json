@@ -1,0 +1,6 @@
+{
+  "name": "SaaS Landing Page Portal & Conversion Architect",
+  "description": "An interactive studio for designing, optimizing, and previewing high-end SaaS landing pages, featuring an integrated modular Job Portal, an authenticated admin applicant tracking table, and a Lead Magnet Revenue Calculator.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
