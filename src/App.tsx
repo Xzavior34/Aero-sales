@@ -363,29 +363,6 @@ export default function App() {
               >
                 POLICIES
               </button>
-              
-              {/* External and Smooth Scroll Links for demonstrative self-explanatory UX */}
-              <div className="pt-2 border-t border-slate-100 space-y-3">
-                <span className="text-[9px] font-mono text-slate-400 font-bold uppercase tracking-wider block">DEMO & UTILITIES</span>
-                
-                <a 
-                  href="https://google.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="block text-xs font-mono font-bold w-full text-left py-1 text-blue-600 hover:text-blue-800 flex items-center gap-1.5"
-                >
-                  EXTERNAL GOOGLE DOCS ↗ <span className="text-[9px] font-light text-slate-400">(Closes Menu)</span>
-                </a>
-
-                <button 
-                  onClick={() => {
-                    document.getElementById("footer")?.scrollIntoView({ behavior: "smooth" });
-                  }}
-                  className="block text-xs font-mono font-bold w-full text-left py-1 text-amber-600 hover:text-amber-800 flex items-center gap-1.5 smooth-scroll"
-                >
-                  SMOOTH SCROLL TO FOOTER ↓ <span className="text-[9px] font-light text-slate-400">(Closes Menu)</span>
-                </button>
-              </div>
 
               <button 
                 onClick={() => handleNavigate("audit")}
@@ -442,41 +419,44 @@ export default function App() {
                   <ConversionCalculator config={landingPageData.calculator} theme={selectedTheme} />
                 </div>
               </div>
-            )}
-
-            {currentPage === "sandbox" && (
-              <div className="w-full flex flex-col lg:flex-row h-[calc(100vh-64px)] overflow-hidden">
+            )}            {currentPage === "sandbox" && (
+              <div className="w-full flex flex-col lg:flex-row h-[calc(100vh-64px)] overflow-hidden bg-slate-50">
                 
                 {/* Sandbox Control Column */}
                 <aside className="w-full lg:w-[460px] shrink-0 border-r border-slate-200 bg-white flex flex-col h-full overflow-y-auto p-6 space-y-6 scrollbar-thin shadow-xs">
                   
                   {/* Sandbox Banner */}
-                  <div className="bg-slate-900 text-white p-4 rounded-2xl space-y-1">
+                  <div className="bg-slate-950 text-white p-5 rounded-2xl space-y-1.5 border border-slate-800">
                     <div className="flex justify-between items-center">
                       <span className="text-[8px] font-mono font-bold tracking-widest text-amber-400 uppercase bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
                         INTERACTIVE LAB
                       </span>
-                      <span className="text-[9px] font-mono text-slate-400">V2.0 STABLE</span>
+                      <span className="text-[9px] font-mono text-slate-400">V2.1 SECURE</span>
                     </div>
-                    <p className="text-xs font-bold font-display">Aero Pipeline Optimizer Sandbox</p>
-                    <p className="text-[9px] text-slate-300 leading-normal font-light">
-                      Simulate visual and copy adjustments to high-converting formats. Use Gemini to optimize for other niches dynamically.
+                    <p className="text-sm font-black font-display text-slate-100">Aero Pipeline Optimizer Sandbox</p>
+                    <p className="text-[10px] text-slate-300 leading-normal font-light">
+                      Review, audit, and simulate custom outbound formats. Use our integrated Gemini instance to compile high-performing copywriting for any niche on the fly.
                     </p>
                   </div>
 
                   {/* Section 1: Template Presets */}
-                  <div className="space-y-2.5">
-                    <h2 className="text-[9px] font-mono font-bold tracking-widest text-slate-400 uppercase flex items-center gap-1.5">
-                      <Layout className="w-3.5 h-3.5 text-slate-400" />
-                      Select Sandbox Presets
-                    </h2>
+                  <div className="space-y-3 border-t border-slate-100 pt-5">
+                    <div className="flex justify-between items-center">
+                      <h2 className="text-[9px] font-mono font-bold tracking-widest text-slate-400 uppercase flex items-center gap-1.5">
+                        <Layout className="w-3.5 h-3.5 text-slate-400" />
+                        STEP 1: SELECT PRESET BLUEPRINT
+                      </h2>
+                    </div>
+                    <p className="text-[10px] text-slate-400 leading-normal font-light">
+                      Choose an initial blueprint configured for outbound campaigns, high-earning worker recruitment, or RevOps services.
+                    </p>
                     <div className="grid grid-cols-3 gap-2">
                       <button
                         onClick={() => setActivePreset("aether")}
                         className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
                           activePreset === "aether"
                             ? "bg-amber-50 border-amber-200 text-amber-700 font-bold"
-                            : "bg-slate-50 border-slate-100 text-slate-500 hover:border-slate-200 hover:bg-slate-100/50"
+                            : "bg-slate-50 border-slate-150 text-slate-500 hover:border-slate-200 hover:bg-slate-100/50"
                         }`}
                       >
                         <p className="text-[9px] font-bold font-mono">OUTBOUND</p>
@@ -487,10 +467,10 @@ export default function App() {
                         className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
                           activePreset === "prism"
                             ? "bg-amber-50 border-amber-200 text-amber-700 font-bold"
-                            : "bg-slate-50 border-slate-100 text-slate-500 hover:border-slate-200 hover:bg-slate-100/50"
+                            : "bg-slate-50 border-slate-150 text-slate-500 hover:border-slate-200 hover:bg-slate-100/50"
                         }`}
                       >
-                        <p className="text-[9px] font-bold font-mono">TALENT</p>
+                        <p className="text-[9px] font-bold font-mono">RECRUITING</p>
                         <span className="text-[7.5px] text-slate-400 uppercase tracking-widest font-mono">Prism</span>
                       </button>
                       <button
@@ -498,7 +478,7 @@ export default function App() {
                         className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
                           activePreset === "scribe"
                             ? "bg-amber-50 border-amber-200 text-amber-700 font-bold"
-                            : "bg-slate-50 border-slate-100 text-slate-500 hover:border-slate-200 hover:bg-slate-100/50"
+                            : "bg-slate-50 border-slate-150 text-slate-500 hover:border-slate-200 hover:bg-slate-100/50"
                         }`}
                       >
                         <p className="text-[9px] font-bold font-mono">REVOPS</p>
@@ -508,16 +488,20 @@ export default function App() {
                   </div>
 
                   {/* Section 2: Gemini Copilot Generator */}
-                  <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-3 shadow-sm">
+                  <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-3 shadow-2xs">
                     <div className="flex justify-between items-center pb-2 border-b border-slate-200">
                       <h3 className="text-[11px] font-mono font-bold text-slate-700 flex items-center gap-1.5 uppercase">
                         <Sparkles className="w-3.5 h-3.5 text-amber-600 animate-pulse" />
-                        AI Copy Generator
+                        STEP 2: CUSTOM AI COPYWRITER
                       </h3>
-                      <span className="text-[8px] font-mono text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">GEMINI PRO</span>
+                      <span className="text-[8px] font-mono text-slate-400 bg-white px-1.5 py-0.5 rounded border border-slate-200">GEMINI PRO</span>
                     </div>
 
-                    <form onSubmit={handleGenerateLandingPage} className="space-y-3.5">
+                    <p className="text-[10px] text-slate-400 leading-relaxed font-light">
+                      Draft elite copywriting and structured metrics automatically. Enter your SaaS parameters and let Gemini optimize the hook.
+                    </p>
+
+                    <form onSubmit={handleGenerateLandingPage} className="space-y-3.5 pt-1">
                       <div className="space-y-1">
                         <label className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider block">
                           Product Name
@@ -527,7 +511,7 @@ export default function App() {
                           placeholder="e.g. Vesper DB"
                           value={productName}
                           onChange={(e) => setProductName(e.target.value)}
-                          className="w-full bg-white border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs text-slate-800 p-2.5 rounded-xl outline-none transition-all"
+                          className="w-full bg-white border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs text-slate-800 p-2.5 rounded-xl outline-none transition-all shadow-3xs"
                         />
                       </div>
 
@@ -540,7 +524,7 @@ export default function App() {
                           value={productHook}
                           onChange={(e) => setProductHook(e.target.value)}
                           rows={2}
-                          className="w-full bg-white border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs text-slate-800 p-2.5 rounded-xl outline-none transition-all resize-none font-light leading-relaxed"
+                          className="w-full bg-white border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs text-slate-800 p-2.5 rounded-xl outline-none transition-all resize-none font-light leading-relaxed shadow-3xs"
                         />
                       </div>
 
@@ -553,7 +537,7 @@ export default function App() {
                           placeholder="e.g. FinTech CTOs & Chief Security Officers"
                           value={targetAudience}
                           onChange={(e) => setTargetAudience(e.target.value)}
-                          className="w-full bg-white border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs text-slate-800 p-2.5 rounded-xl outline-none transition-all font-light"
+                          className="w-full bg-white border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs text-slate-800 p-2.5 rounded-xl outline-none transition-all font-light shadow-3xs"
                         />
                       </div>
 
@@ -613,58 +597,82 @@ export default function App() {
                   </div>
 
                   {/* Section 3: Traffic Funnel Simulator */}
-                  <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-3 shadow-sm">
+                  <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-4 shadow-2xs">
                     <div className="flex justify-between items-center pb-2 border-b border-slate-200">
                       <h3 className="text-[11px] font-mono font-bold text-slate-700 flex items-center gap-1.5 uppercase">
                         <Activity className="w-3.5 h-3.5 text-slate-400 animate-pulse" />
-                        Funnel Simulation
+                        STEP 3: BEHAVIORAL FUNNEL SIMULATOR
                       </h3>
-                      <button 
-                        onClick={startSimulation}
-                        disabled={simState === "running"}
-                        className="text-[8px] font-mono text-blue-700 font-bold bg-blue-50 border border-blue-100 px-2 py-1 rounded-lg hover:bg-blue-100 disabled:opacity-40 flex items-center gap-1 cursor-pointer"
-                      >
-                        <Play className="w-2.5 h-2.5 fill-blue-600 text-blue-600" /> Run simulation
-                      </button>
                     </div>
 
-                    <p className="text-[10px] text-slate-500 leading-normal font-light">
-                      Simulate 5,000 real target visitors hitting this template structure to audit conversions.
+                    <p className="text-[10px] text-slate-400 leading-normal font-light">
+                      Simulate 5,000 corporate prospects hitting your structured blueprint copy on key digital channels. Audit click actions and final form signups in real-time.
                     </p>
 
-                    <div className="space-y-2 font-mono text-[10.5px]">
-                      {/* Visitors */}
-                      <div className="space-y-0.5">
-                        <div className="flex justify-between text-[8.5px] text-slate-400 font-bold">
-                          <span>1. SIMULATED VISITORS</span>
-                          <span className="text-slate-700">{simVisitors.toLocaleString()} / 5,000</span>
-                        </div>
-                        <div className="w-full bg-slate-200 h-1 rounded-full overflow-hidden">
-                          <div className="bg-slate-900 h-full transition-all duration-100" style={{ width: `${(simVisitors / 5000) * 100}%` }} />
-                        </div>
+                    {/* Simulation Dashboard Stats Grid */}
+                    <div className="grid grid-cols-2 gap-3 pt-1">
+                      <div className="bg-white border border-slate-150 rounded-xl p-3 shadow-3xs font-mono text-left">
+                        <span className="text-[8px] text-slate-400 uppercase font-bold block">TRAFFIC SAMPLE</span>
+                        <span className="text-sm font-black text-slate-800">{simVisitors.toLocaleString()}</span>
+                        <span className="text-[8px] text-slate-400 block mt-0.5">visitors</span>
+                      </div>
+                      <div className="bg-white border border-slate-150 rounded-xl p-3 shadow-3xs font-mono text-left">
+                        <span className="text-[8px] text-slate-400 uppercase font-bold block">INTERACTIONS</span>
+                        <span className="text-sm font-black text-blue-600">{simClicks.toLocaleString()}</span>
+                        <span className="text-[8px] text-slate-400 block mt-0.5">clicks (12.5% CTR)</span>
+                      </div>
+                      <div className="bg-white border border-slate-150 rounded-xl p-3 shadow-3xs font-mono text-left">
+                        <span className="text-[8px] text-slate-400 uppercase font-bold block">CONVERSIONS</span>
+                        <span className="text-sm font-black text-emerald-600">{simConversions.toLocaleString()}</span>
+                        <span className="text-[8px] text-slate-400 block mt-0.5">{landingPageData.conversionInsights.predictedConversionRate}% Est CR</span>
+                      </div>
+                      <div className="bg-white border border-slate-150 rounded-xl p-3 shadow-3xs font-mono text-left">
+                        <span className="text-[8px] text-slate-400 uppercase font-bold block">SIMULATED LTV YIELD</span>
+                        <span className="text-sm font-black text-amber-600">${(simConversions * 150).toLocaleString()}</span>
+                        <span className="text-[8px] text-slate-400 block mt-0.5">@ $150 unit value</span>
+                      </div>
+                    </div>
+
+                    {/* Progress bars & Action */}
+                    <div className="space-y-3 font-mono text-[10.5px] pt-1">
+                      <div className="flex justify-between items-center text-[9px] text-slate-500 bg-white border border-slate-150 p-2.5 rounded-xl">
+                        <span className="flex items-center gap-1.5">
+                          <span className={`w-2 h-2 rounded-full ${simState === "running" ? "bg-amber-500 animate-ping" : simState === "completed" ? "bg-emerald-500" : "bg-slate-300"}`} />
+                          {simState === "idle" && "Ready to trigger"}
+                          {simState === "running" && "Streaming traffic..."}
+                          {simState === "completed" && "Simulation finalized"}
+                        </span>
+                        
+                        <button 
+                          onClick={startSimulation}
+                          disabled={simState === "running"}
+                          className="text-[9px] font-bold text-white bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-lg disabled:opacity-40 flex items-center gap-1.5 cursor-pointer shadow-xs transition-all"
+                        >
+                          <Play className="w-2.5 h-2.5 fill-white text-white" /> Run Simulation
+                        </button>
                       </div>
 
-                      {/* Conversions */}
-                      <div className="space-y-0.5">
-                        <div className="flex justify-between text-[8.5px] text-slate-400 font-bold">
-                          <span>2. REVENUE SIGNUPS ({landingPageData.conversionInsights.predictedConversionRate}% Est)</span>
-                          <span className="text-amber-600 font-bold flex items-center gap-0.5">
-                            <TrendingUp className="w-3 h-3" />
-                            {simConversions.toLocaleString()}
-                          </span>
+                      {simState === "running" && (
+                        <div className="space-y-1">
+                          <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                            <div className="bg-blue-600 h-full transition-all duration-100" style={{ width: `${(simVisitors / 5000) * 100}%` }} />
+                          </div>
+                          <div className="text-[8px] text-slate-400 text-right">Progress: {Math.round((simVisitors / 5000) * 100)}%</div>
                         </div>
-                        <div className="w-full bg-slate-200 h-1 rounded-full overflow-hidden">
-                          <div className="bg-amber-500 h-full transition-all duration-100" style={{ width: `${(simVisitors / 5000) * 100}%` }} />
-                        </div>
-                      </div>
+                      )}
                     </div>
                   </div>
 
                   {/* Section 4: Deep Conversion Insights Teardown */}
-                  <ConversionInsightsPanel 
-                    insights={landingPageData.conversionInsights} 
-                    productName={landingPageData.productName} 
-                  />
+                  <div className="border-t border-slate-100 pt-5">
+                    <h2 className="text-[9px] font-mono font-bold tracking-widest text-slate-400 uppercase flex items-center gap-1.5 mb-3">
+                      STEP 4: COGNITIVE PERSUASION ANALYSIS
+                    </h2>
+                    <ConversionInsightsPanel 
+                      insights={landingPageData.conversionInsights} 
+                      productName={landingPageData.productName} 
+                    />
+                  </div>
 
                 </aside>
 
@@ -672,28 +680,28 @@ export default function App() {
                 <main className="flex-1 bg-slate-100 flex flex-col h-full overflow-hidden p-6 relative">
                   
                   {/* View Toggle Bar */}
-                  <div className="flex justify-between items-center mb-4 shrink-0 bg-white/80 p-1.5 rounded-2xl border border-slate-200/50 backdrop-blur-md">
+                  <div className="flex justify-between items-center mb-4 shrink-0 bg-white/80 p-2 rounded-2xl border border-slate-200/50 backdrop-blur-md">
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => setActiveView("showcase")}
                         className={`text-[10px] font-mono font-bold px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-xs ${
                           activeView === "showcase" 
                             ? "bg-slate-900 text-white" 
-                            : "text-slate-500 hover:text-slate-800"
+                            : "text-slate-500 hover:text-slate-800 hover:bg-slate-50"
                         }`}
                       >
-                        <Eye className="w-3.5 h-3.5" /> Normal Layout
+                        <Eye className="w-3.5 h-3.5" /> Live Copy Showcase
                       </button>
                       
                       <button
                         onClick={() => setActiveView("heatmap")}
                         className={`text-[10px] font-mono font-bold px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-xs ${
                           activeView === "heatmap" 
-                            ? "bg-red-600 text-white" 
-                            : "text-slate-500 hover:text-slate-800"
+                            ? "bg-rose-600 text-white" 
+                            : "text-slate-500 hover:text-slate-800 hover:bg-slate-50"
                         }`}
                       >
-                        <Flame className="w-3.5 h-3.5" /> Heatmap Overlay
+                        <Flame className="w-3.5 h-3.5" /> Heatmap Diagnostic
                       </button>
                     </div>
 
@@ -702,6 +710,19 @@ export default function App() {
                       Dynamic Preview
                     </div>
                   </div>
+
+                  {/* Informative Heatmap Explanation Banner */}
+                  {activeView === "heatmap" && (
+                    <div className="mb-4 bg-rose-50 border border-rose-100 rounded-xl p-3 text-xs text-rose-800 flex items-start gap-2.5 shadow-3xs animate-fadeIn shrink-0">
+                      <Flame className="w-4 h-4 text-rose-500 shrink-0 mt-0.5 animate-pulse" />
+                      <div>
+                        <span className="font-bold uppercase tracking-wider block text-[9.5px] mb-0.5">Heatmap Diagnostic Enabled</span>
+                        <p className="font-light text-[11px] leading-relaxed">
+                          Warm crimson zones highlight high-dwell areas where prospective buyers pay the absolute most visual attention (focused on product hook headlines and interactive calculators). Designed to verify optical alignment.
+                        </p>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Aesthetic Preview Canvas Wrapper */}
                   <div className="flex-1 w-full bg-white rounded-3xl border border-slate-200 shadow-xl overflow-y-auto overflow-x-hidden relative scrollbar-thin">

@@ -141,13 +141,14 @@ export function PilotRolesBoard({ theme, isLight, currentStyles, onSignupComplet
       <div className="text-center space-y-3">
         <span className="text-[9px] font-mono tracking-widest font-bold text-amber-600 uppercase inline-flex items-center gap-1.5 bg-amber-50/80 px-3.5 py-1.5 rounded-full border border-amber-100/60 max-w-max mx-auto shadow-xs">
           <Sparkles className="w-3.5 h-3.5 text-amber-500 animate-pulse" />
-          AERO GLOBAL OPPORTUNITIES
+          AERO GLOBAL CAREER ENGINE
         </span>
         <h2 className="text-3xl font-display font-bold tracking-tight text-slate-900">
-          Join Our Roster of Sourced Setters & Closers.
+          Explore Sourced Sales Placements & Openings.
         </h2>
-        <p className="text-xs max-w-lg mx-auto leading-relaxed text-slate-500 font-light">
-          We source, vet, and place highly motivated remote sales representatives from Nigeria with heavy-hitting US and European B2B and DTC companies. Choose an open track below.
+        <p className="text-xs max-w-lg mx-auto leading-relaxed text-slate-500 font-light font-sans">
+          <strong>For Companies:</strong> Review the active sales career tracks we recruit, screen, and place inside scaling brands.<br />
+          <strong>For Workers:</strong> Apply below to join our elite remote sales training roster and secure premier high-paying roles.
         </p>
       </div>
 

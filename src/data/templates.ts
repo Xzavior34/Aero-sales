@@ -11,32 +11,32 @@ export const TEMPLATES: Record<string, LandingPageData> = {
       ctaSecondary: "Explore Placed Solutions"
     },
     metrics: {
-      label1: "Daily touches per setter",
+      label1: "Daily Outbound Actions Per Rep",
       value1: "150 - 180+",
-      label2: "Avg Sourced Client Pipeline Leak",
+      label2: "Average Revenue Found Per Client",
       value2: "$3.2M+",
-      label3: "Time to Secure Executive Interest",
-      value3: "10 Min"
+      label3: "Average Client Integration Speed",
+      value3: "7 Days"
     },
     features: [
       {
-        title: "Elite Placement & Sourcing",
-        description: "Placing dedicated, rigorously trained appointment setters and sales closers directly inside your systems. We manage and scale team performance daily.",
+        title: "For Companies: Elite Sales Placement",
+        description: "We source, vet, and place highly fluent, rigorously trained appointment setters and sales closers directly inside your systems. We manage and scale daily performance so you don't have to.",
         icon: "Users"
       },
       {
-        title: "Revenue Leak Audits",
-        description: "We don't send cold pitches. We identify real, mathematical gaps in your category, showing prospective buyers exactly how much money is leaking to alternative options.",
+        title: "For Workers: High-Payout Placements",
+        description: "Get trained by elite sales veterans and secured in high-earning, commission-based placements with fast-growing brands in the US and Europe. Work from anywhere with top-tier training.",
         icon: "TrendingUp"
       },
       {
-        title: "CRM Pipeline Architecture",
-        description: "We build out complete outbound sales workflows in GoHighLevel (GHL) with clean smart lists, custom triggers, automated email/SMS sequencers, and accurate hygiene tracking.",
+        title: "Full Outreach CRM Infrastructure",
+        description: "We configure your entire sales engine inside GoHighLevel, including optimized smart lists, custom automated sequences (Email/SMS), and absolute performance visibility.",
         icon: "Cpu"
       }
     ],
     calculator: {
-      metricLabel: "Estimated Annual Revenue (USD)",
+      metricLabel: "Your Estimated Annual Revenue (USD)",
       metricMin: 200000,
       metricMax: 10000000,
       metricDefault: 2500000,
@@ -46,7 +46,7 @@ export const TEMPLATES: Record<string, LandingPageData> = {
       valueLabel: "Estimated Brand Revenue Leak"
     },
     testimonial: {
-      quote: "Deploying Aero's dedicated setter-closer pipeline completely revolutionized our sales cycles. Within 30 days, their trained reps booked 42 enterprise meetings, recapturing over $380,000 in leaked pipeline.",
+      quote: "Partnering with Aero completely transformed our sales cycle. Their integrated reps booked 42 high-value enterprise meetings in their first 30 days, unlocking over $380,000 in previously uncaptured sales pipeline.",
       author: "Chidi Ndubisi",
       role: "VP of Global Revenue Operations",
       company: "ScaleFlow B2B Enterprise",
@@ -54,22 +54,22 @@ export const TEMPLATES: Record<string, LandingPageData> = {
     },
     faqs: [
       {
-        question: "Who manages the placed appointment setters and closers?",
-        answer: "Aero Sales Operations actively co-manages, trains, and monitors performance daily. We ensure high-energy, optimized outreach, script refinement, and CRM hygiene are maintained."
+        question: "How does the placement process work for companies?",
+        answer: "We understand your ideal customer profile and outbound script goals first. We then hand-match pre-vetted, high-energy sales professionals from Nigeria and other tech hubs, setting up their workspace, custom tracking links, and GHL CRM systems so they can start booking meetings in under a week."
       },
       {
-        question: "What CRM and automation systems do you integrate with?",
-        answer: "We build and configure native GoHighLevel (GHL) workflows, custom trigger automation, multi-channel email, SMS sequencing, and tracking systems tailored for your industry."
+        question: "What is the opportunity for remote sales reps (workers)?",
+        answer: "Aero is the premier hub for elite remote sales talent. When you pass our vetting process, you receive intensive training in outbound conversational dynamics and are placed in roles with verified high-performance commission splits and top-tier supportive leadership."
       },
       {
-        question: "Where are the appointment setters sourced from?",
-        answer: "We source highly motivated, fluent, high-energy sales representatives from Nigeria and other remote tech hubs, training them rigorously in B2B conversational dynamics."
+        question: "Who manages and trains the remote reps?",
+        answer: "Aero Sales Operations co-manages placed reps daily. We review daily activity metrics, conduct recording teardowns, refine scripts, and ensure optimal customer experience is delivered across all accounts."
       }
     ],
     ctaSection: {
-      headline: "Ready to Plug Your Multi-Million Dollar Pipeline Leak?",
-      subheadline: "Schedule a custom Revenue Leak Audit. We'll identify exact market gaps and propose an integrated elite setter-closer solution.",
-      buttonText: "Request Custom Audit Report"
+      headline: "Accelerate Your Revenue Pipeline Today",
+      subheadline: "Whether you are a growing business looking to scale your sales or an elite rep looking to secure a high-payout placement, Aero is your ultimate outbound partner.",
+      buttonText: "Schedule Free Pipeline Audit"
     },
     conversionInsights: {
       predictedConversionRate: 4.5,
