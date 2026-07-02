@@ -297,6 +297,8 @@ app.post("/api/signups", async (req, res) => {
       roleTitle = "Revenue Leak Audit Lead";
     } else if (roleId === "cta-lead") {
       roleTitle = "Homepage Lead Generation Request";
+    } else if (roleId === "roi-calculator-lead") {
+      roleTitle = "ROI Lift Calculator Lead";
     } else {
       const jobs = await fetchJobs();
       const associatedRole = jobs.find(j => j.id === roleId);

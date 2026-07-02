@@ -8,6 +8,7 @@ import { Homepage } from "./components/Homepage";
 import { PoliciesPage } from "./components/PoliciesPage";
 import { PilotRolesBoard } from "./components/PilotRolesBoard";
 import { ConversionCalculator } from "./components/ConversionCalculator";
+import { FloatingRoiCalculator } from "./components/FloatingRoiCalculator";
 import { 
   Sparkles, 
   Send, 
@@ -47,6 +48,7 @@ export default function App() {
     return "home";
   });
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+  const [auditTab, setAuditTab] = useState<"roi" | "leak">("roi");
 
   // Synchronize browser back/forward buttons with active state
   useEffect(() => {
@@ -413,20 +415,57 @@ export default function App() {
 
             {currentPage === "audit" && (
               <div className="max-w-4xl mx-auto px-6 py-12">
-                <div className="text-center space-y-3 mb-10">
+                <div className="text-center space-y-3 mb-8">
                   <span className="text-[9px] font-mono tracking-widest font-bold text-amber-600 uppercase inline-flex items-center gap-1.5 bg-amber-50 px-3.5 py-1.5 rounded-full border border-amber-100 shadow-xs">
                     <TrendingUp className="w-3.5 h-3.5" />
-                    Interactive Leak Audit
+                    Interactive Diagnostic Suite
                   </span>
                   <h1 className="text-3xl font-display font-bold text-slate-900">
-                    Enterprise Revenue Leak Auditor
+                    {auditTab === "roi" 
+                      ? "Aero Outbound ROI Lift Calculator" 
+                      : "Enterprise Revenue Leak Auditor"}
                   </h1>
-                  <p className="text-xs text-slate-500 max-w-lg mx-auto font-light leading-relaxed">
-                    Compute mathematical brand leakages based on ARR, traffic, conversion, and listing optimization score. Request an official executive diagnostic document from our Sr. Closers.
+                  <p className="text-xs text-slate-500 max-w-xl mx-auto font-light leading-relaxed">
+                    {auditTab === "roi"
+                      ? "Compute monthly and annualized revenue delta recaptured when switching from static forms to Aero's sifting appointment setters & high-close remote closers."
+                      : "Compute mathematical brand leakages based on ARR, traffic, conversion, and listing optimization score. Request an official executive diagnostic document from our Sr. Closers."}
                   </p>
                 </div>
-                <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-10 shadow-xs">
-                  <ConversionCalculator config={landingPageData.calculator} theme={selectedTheme} />
+
+                {/* Segmented Diagnostic Tabs */}
+                <div className="flex justify-center mb-8">
+                  <div className="inline-flex bg-slate-100 p-1 rounded-2xl border border-slate-200/60 shadow-3xs">
+                    <button
+                      onClick={() => setAuditTab("roi")}
+                      className={`px-5 py-2 rounded-xl font-mono text-[9.5px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                        auditTab === "roi"
+                          ? "bg-slate-900 text-amber-400 shadow-xs"
+                          : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
+                      }`}
+                    >
+                      📈 Outbound ROI Lift
+                    </button>
+                    <button
+                      onClick={() => setAuditTab("leak")}
+                      className={`px-5 py-2 rounded-xl font-mono text-[9.5px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                        auditTab === "leak"
+                          ? "bg-slate-900 text-blue-400 shadow-xs"
+                          : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
+                      }`}
+                    >
+                      💰 Revenue Leak Auditor
+                    </button>
+                  </div>
+                </div>
+
+                <div className="transition-all duration-300">
+                  {auditTab === "roi" ? (
+                    <FloatingRoiCalculator isInline={true} onNavigate={handleNavigate} />
+                  ) : (
+                    <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-10 shadow-xs">
+                      <ConversionCalculator config={landingPageData.calculator} theme={selectedTheme} />
+                    </div>
+                  )}
                 </div>
               </div>
             )}            {currentPage === "sandbox" && (

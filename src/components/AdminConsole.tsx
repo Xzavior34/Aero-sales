@@ -771,6 +771,12 @@ export function AdminConsole({ onRoleAdded }: AdminConsoleProps) {
                         <td className="p-3">
                           <p className="font-semibold text-slate-700 leading-tight">{signup.roleTitle}</p>
                           <p className="text-[9px] text-slate-400 font-mono">{new Date(signup.timestamp).toLocaleDateString()}</p>
+                          {signup.roleId === "roi-calculator-lead" && (
+                            <span className="inline-flex items-center gap-1 mt-1 text-[8px] font-mono font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+                              <TrendingUp className="w-2.5 h-2.5 text-amber-600" />
+                              ROI Metrics Attached
+                            </span>
+                          )}
                         </td>
                         <td className="p-3">
                           <span className={`inline-flex items-center gap-1 text-[8.5px] font-mono font-bold uppercase px-2 py-0.5 rounded-full border ${
@@ -835,9 +841,31 @@ export function AdminConsole({ onRoleAdded }: AdminConsoleProps) {
                       </div>
                       <span className="text-[9px] font-mono text-slate-400">{signup.roleTitle}</span>
                     </div>
-                    <p className="font-light italic text-slate-600">
-                      &ldquo;{signup.experience}&rdquo;
-                    </p>
+                    {signup.roleId === "roi-calculator-lead" ? (
+                      <div className="mt-2 p-3 bg-amber-50 border border-amber-200/80 rounded-xl space-y-2">
+                        <p className="text-amber-800 font-extrabold text-[9px] uppercase tracking-wider flex items-center gap-1 font-mono">
+                          <TrendingUp className="w-3.5 h-3.5" /> Calculated Funnel &amp; Value Impact
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-slate-700 font-mono text-[10.5px]">
+                          {signup.experience.split("\n").filter(line => line.trim().startsWith("-")).map((line, idx) => {
+                            const cleanLine = line.replace(/^-\s*/, "");
+                            const parts = cleanLine.split(":");
+                            const label = parts[0];
+                            const value = parts.slice(1).join(":");
+                            return (
+                              <div key={idx} className="border-b border-slate-100 pb-1 flex justify-between gap-2">
+                                <span className="text-slate-400 font-bold uppercase text-[8.5px]">{label}:</span>
+                                <span className="font-bold text-slate-800 text-right">{value}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="font-light italic text-slate-600">
+                        &ldquo;{signup.experience}&rdquo;
+                      </p>
+                    )}
                     {signup.cvName && (
                       <div className="mt-2 flex items-center gap-1 text-[9px] font-mono font-semibold text-slate-500 bg-white max-w-max px-2 py-0.5 rounded border border-slate-250">
                         <Paperclip className="w-3 h-3 text-slate-400 animate-pulse" /> Attached CV: {signup.cvName}
