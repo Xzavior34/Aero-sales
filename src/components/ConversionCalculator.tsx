@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { LandingPageData } from "../types";
 import { DollarSign, TrendingUp, Sparkles, AlertCircle, Loader2, CheckCircle } from "lucide-react";
 import { motion } from "motion/react";

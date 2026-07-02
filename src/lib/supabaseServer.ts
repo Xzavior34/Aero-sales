@@ -1,5 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import dotenv from "dotenv";
+import fs from "fs";
+import path from "path";
 
 dotenv.config();
 
@@ -37,7 +39,7 @@ export function getSupabaseClient() {
   return supabaseClient;
 }
 
-// In-memory fallbacks
+// Data models
 export interface Job {
   id: string;
   title: string;
@@ -59,8 +61,10 @@ export interface Application {
   timestamp: string;
 }
 
-// Memory database seeds
-let memoryJobs: Job[] = [
+// Local File Database Helper for real persistence when Supabase is not present
+const DB_FILE = path.join(process.cwd(), "src", "data", "db.json");
+
+const defaultJobs: Job[] = [
   {
     id: "job-1",
     title: "B2B Outbound Appointment Setter (Nigeria/Remote)",
@@ -102,7 +106,7 @@ let memoryJobs: Job[] = [
   }
 ];
 
-let memoryApplications: Application[] = [
+const defaultApplications: Application[] = [
   {
     id: "app-1",
     fullName: "Sarah Jenkins",
@@ -124,6 +128,42 @@ let memoryApplications: Application[] = [
     timestamp: new Date("2026-07-01T16:45:00Z").toISOString()
   }
 ];
+
+function readLocalDb(): { jobs: Job[]; applications: Application[] } {
+  try {
+    if (fs.existsSync(DB_FILE)) {
+      const data = fs.readFileSync(DB_FILE, "utf-8");
+      return JSON.parse(data);
+    }
+  } catch (err) {
+    console.error("Error reading local database file, using defaults:", err);
+  }
+  
+  // Create file with default data if missing
+  const initial = { jobs: defaultJobs, applications: defaultApplications };
+  try {
+    const parentDir = path.dirname(DB_FILE);
+    if (!fs.existsSync(parentDir)) {
+      fs.mkdirSync(parentDir, { recursive: true });
+    }
+    fs.writeFileSync(DB_FILE, JSON.stringify(initial, null, 2), "utf-8");
+  } catch (err) {
+    console.error("Error creating local database seed file:", err);
+  }
+  return initial;
+}
+
+function writeLocalDb(jobs: Job[], applications: Application[]) {
+  try {
+    const parentDir = path.dirname(DB_FILE);
+    if (!fs.existsSync(parentDir)) {
+      fs.mkdirSync(parentDir, { recursive: true });
+    }
+    fs.writeFileSync(DB_FILE, JSON.stringify({ jobs, applications }, null, 2), "utf-8");
+  } catch (err) {
+    console.error("Error saving database file:", err);
+  }
+}
 
 // Helper to synchronise table structural warnings or configurations
 export const SUPABASE_SQL_INSTRUCTIONS = `
@@ -166,7 +206,7 @@ CREATE POLICY "Allow full admin access to applications" ON public.applications A
 export async function fetchJobs(): Promise<Job[]> {
   const client = getSupabaseClient();
   if (!client) {
-    return memoryJobs;
+    return readLocalDb().jobs;
   }
   try {
     const { data, error } = await client
@@ -175,13 +215,13 @@ export async function fetchJobs(): Promise<Job[]> {
       .order("createdAt", { ascending: false });
 
     if (error) {
-      console.warn("Supabase jobs select error, using memory fallback:", error.message);
-      return memoryJobs;
+      console.warn("Supabase jobs select error, using local fallback:", error.message);
+      return readLocalDb().jobs;
     }
     return data as Job[];
   } catch (err: any) {
     console.error("fetchJobs error:", err);
-    return memoryJobs;
+    return readLocalDb().jobs;
   }
 }
 
@@ -189,12 +229,14 @@ export async function fetchJobs(): Promise<Job[]> {
 export async function saveJob(job: Job): Promise<Job> {
   const client = getSupabaseClient();
   if (!client) {
-    const existingIndex = memoryJobs.findIndex(j => j.id === job.id);
+    const db = readLocalDb();
+    const existingIndex = db.jobs.findIndex(j => j.id === job.id);
     if (existingIndex > -1) {
-      memoryJobs[existingIndex] = job;
+      db.jobs[existingIndex] = job;
     } else {
-      memoryJobs.unshift(job);
+      db.jobs.unshift(job);
     }
+    writeLocalDb(db.jobs, db.applications);
     return job;
   }
   try {
@@ -217,13 +259,15 @@ export async function saveJob(job: Job): Promise<Job> {
     }
     return data as Job;
   } catch (err: any) {
-    console.error("saveJob error, falling back to memory:", err);
-    const existingIndex = memoryJobs.findIndex(j => j.id === job.id);
+    console.error("saveJob error, falling back to local database:", err);
+    const db = readLocalDb();
+    const existingIndex = db.jobs.findIndex(j => j.id === job.id);
     if (existingIndex > -1) {
-      memoryJobs[existingIndex] = job;
+      db.jobs[existingIndex] = job;
     } else {
-      memoryJobs.unshift(job);
+      db.jobs.unshift(job);
     }
+    writeLocalDb(db.jobs, db.applications);
     return job;
   }
 }
@@ -232,9 +276,11 @@ export async function saveJob(job: Job): Promise<Job> {
 export async function closeJob(id: string): Promise<boolean> {
   const client = getSupabaseClient();
   if (!client) {
-    const job = memoryJobs.find(j => j.id === id);
+    const db = readLocalDb();
+    const job = db.jobs.find(j => j.id === id);
     if (job) {
       job.status = "closed";
+      writeLocalDb(db.jobs, db.applications);
       return true;
     }
     return false;
@@ -248,9 +294,11 @@ export async function closeJob(id: string): Promise<boolean> {
     return true;
   } catch (err) {
     console.error("closeJob error:", err);
-    const job = memoryJobs.find(j => j.id === id);
+    const db = readLocalDb();
+    const job = db.jobs.find(j => j.id === id);
     if (job) {
       job.status = "closed";
+      writeLocalDb(db.jobs, db.applications);
       return true;
     }
     return false;
@@ -261,7 +309,7 @@ export async function closeJob(id: string): Promise<boolean> {
 export async function fetchApplications(): Promise<Application[]> {
   const client = getSupabaseClient();
   if (!client) {
-    return memoryApplications;
+    return readLocalDb().applications;
   }
   try {
     const { data, error } = await client
@@ -270,13 +318,13 @@ export async function fetchApplications(): Promise<Application[]> {
       .order("timestamp", { ascending: false });
 
     if (error) {
-      console.warn("Supabase applications select error, using memory fallback:", error.message);
-      return memoryApplications;
+      console.warn("Supabase applications select error, using local fallback:", error.message);
+      return readLocalDb().applications;
     }
     return data as Application[];
   } catch (err: any) {
     console.error("fetchApplications error:", err);
-    return memoryApplications;
+    return readLocalDb().applications;
   }
 }
 
@@ -284,7 +332,9 @@ export async function fetchApplications(): Promise<Application[]> {
 export async function submitApplication(app: Application): Promise<Application> {
   const client = getSupabaseClient();
   if (!client) {
-    memoryApplications.unshift(app);
+    const db = readLocalDb();
+    db.applications.unshift(app);
+    writeLocalDb(db.jobs, db.applications);
     return app;
   }
   try {
@@ -308,8 +358,10 @@ export async function submitApplication(app: Application): Promise<Application> 
     }
     return data as Application;
   } catch (err: any) {
-    console.error("submitApplication error, falling back to memory:", err);
-    memoryApplications.unshift(app);
+    console.error("submitApplication error, falling back to local database:", err);
+    const db = readLocalDb();
+    db.applications.unshift(app);
+    writeLocalDb(db.jobs, db.applications);
     return app;
   }
 }
@@ -318,9 +370,11 @@ export async function submitApplication(app: Application): Promise<Application> 
 export async function updateApplicationStatus(id: string, status: Application["status"]): Promise<boolean> {
   const client = getSupabaseClient();
   if (!client) {
-    const app = memoryApplications.find(a => a.id === id);
+    const db = readLocalDb();
+    const app = db.applications.find(a => a.id === id);
     if (app) {
       app.status = status;
+      writeLocalDb(db.jobs, db.applications);
       return true;
     }
     return false;
@@ -334,9 +388,11 @@ export async function updateApplicationStatus(id: string, status: Application["s
     return true;
   } catch (err) {
     console.error("updateApplicationStatus error:", err);
-    const app = memoryApplications.find(a => a.id === id);
+    const db = readLocalDb();
+    const app = db.applications.find(a => a.id === id);
     if (app) {
       app.status = status;
+      writeLocalDb(db.jobs, db.applications);
       return true;
     }
     return false;

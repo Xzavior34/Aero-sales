@@ -277,6 +277,8 @@ app.post("/api/signups", async (req, res) => {
     let roleTitle = "General Operations Candidate";
     if (roleId === "audit-request") {
       roleTitle = "Revenue Leak Audit Lead";
+    } else if (roleId === "cta-lead") {
+      roleTitle = "Homepage Lead Generation Request";
     } else {
       const jobs = await fetchJobs();
       const associatedRole = jobs.find(j => j.id === roleId);
