@@ -76,4 +76,6 @@ export interface Signup {
   experience: string;
   status: "applied" | "interviewing" | "hired" | "pending" | "reviewed" | "shortlisted";
   timestamp: string;
+  linkedinUrl?: string;
+  cvName?: string;
 }

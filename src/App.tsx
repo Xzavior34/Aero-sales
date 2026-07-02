@@ -37,8 +37,31 @@ import { motion, AnimatePresence } from "motion/react";
 
 export default function App() {
   // Navigation State
-  const [currentPage, setCurrentPage] = useState<"home" | "roster" | "audit" | "sandbox" | "admin" | "policies">("home");
+  const [currentPage, setCurrentPage] = useState<"home" | "roster" | "audit" | "sandbox" | "admin" | "policies">(() => {
+    const path = window.location.pathname.replace(/^\/|\/$/g, "");
+    if (path === "admin") return "admin";
+    if (path === "roster") return "roster";
+    if (path === "audit") return "audit";
+    if (path === "sandbox") return "sandbox";
+    if (path === "policies") return "policies";
+    return "home";
+  });
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+
+  // Synchronize browser back/forward buttons with active state
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname.replace(/^\/|\/$/g, "");
+      if (path === "admin") setCurrentPage("admin");
+      else if (path === "roster") setCurrentPage("roster");
+      else if (path === "audit") setCurrentPage("audit");
+      else if (path === "sandbox") setCurrentPage("sandbox");
+      else if (path === "policies") setCurrentPage("policies");
+      else setCurrentPage("home");
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
 
   // Playground / Sandbox states
   const [activePreset, setActivePreset] = useState<string>("aether");
@@ -151,6 +174,7 @@ export default function App() {
   const handleNavigate = (page: typeof currentPage) => {
     setCurrentPage(page);
     setMobileMenuOpen(false);
+    window.history.pushState(null, "", page === "home" ? "/" : "/" + page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -205,12 +229,14 @@ export default function App() {
             >
               AI SANDBOX
             </button>
-            <button 
-              onClick={() => handleNavigate("admin")}
-              className={`text-xs font-mono font-bold tracking-wider transition-colors cursor-pointer ${currentPage === "admin" ? "text-amber-600" : "text-slate-500 hover:text-slate-950"}`}
-            >
-              SYSTEM ADMIN
-            </button>
+            {currentPage === "admin" && (
+              <button 
+                onClick={() => handleNavigate("admin")}
+                className={`text-xs font-mono font-bold tracking-wider transition-colors cursor-pointer ${currentPage === "admin" ? "text-amber-600" : "text-slate-500 hover:text-slate-950"}`}
+              >
+                SYSTEM ADMIN
+              </button>
+            )}
             <button 
               onClick={() => handleNavigate("policies")}
               className={`text-xs font-mono font-bold tracking-wider transition-colors cursor-pointer ${currentPage === "policies" ? "text-amber-600" : "text-slate-500 hover:text-slate-950"}`}
@@ -271,12 +297,14 @@ export default function App() {
               >
                 AI SANDBOX
               </button>
-              <button 
-                onClick={() => handleNavigate("admin")}
-                className="block text-xs font-mono font-bold w-full text-left py-1 text-slate-600 hover:text-slate-950"
-              >
-                SYSTEM ADMIN
-              </button>
+              {currentPage === "admin" && (
+                <button 
+                  onClick={() => handleNavigate("admin")}
+                  className="block text-xs font-mono font-bold w-full text-left py-1 text-slate-600 hover:text-slate-950"
+                >
+                  SYSTEM ADMIN
+                </button>
+              )}
               <button 
                 onClick={() => handleNavigate("policies")}
                 className="block text-xs font-mono font-bold w-full text-left py-1 text-slate-600 hover:text-slate-950"

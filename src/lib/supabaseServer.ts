@@ -59,6 +59,8 @@ export interface Application {
   experience: string;
   status: "applied" | "interviewing" | "hired" | "pending" | "reviewed" | "shortlisted";
   timestamp: string;
+  linkedinUrl?: string;
+  cvName?: string;
 }
 
 // Local File Database Helper for real persistence when Supabase is not present
@@ -188,6 +190,8 @@ CREATE TABLE IF NOT EXISTS public.applications (
     "roleId" TEXT NOT NULL,
     "roleTitle" TEXT NOT NULL,
     experience TEXT,
+    "linkedinUrl" TEXT,
+    "cvName" TEXT,
     status TEXT NOT NULL DEFAULT 'applied',
     timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -347,6 +351,8 @@ export async function submitApplication(app: Application): Promise<Application> 
         roleId: app.roleId,
         roleTitle: app.roleTitle,
         experience: app.experience,
+        linkedinUrl: app.linkedinUrl,
+        cvName: app.cvName,
         status: app.status,
         timestamp: app.timestamp
       })

@@ -245,7 +245,7 @@ app.get("/api/signups", async (req, res) => {
 app.get("/api/signups/export", async (req, res) => {
   try {
     const apps = await fetchApplications();
-    const headers = ["ID", "Full Name", "Email", "Role ID", "Role Title", "Experience", "Status", "Timestamp"];
+    const headers = ["ID", "Full Name", "Email", "Role ID", "Role Title", "Experience", "LinkedIn URL", "CV Name", "Status", "Timestamp"];
     const rows = apps.map(a => [
       a.id,
       `"${a.fullName.replace(/"/g, '""')}"`,
@@ -253,6 +253,8 @@ app.get("/api/signups/export", async (req, res) => {
       a.roleId,
       `"${a.roleTitle.replace(/"/g, '""')}"`,
       `"${(a.experience || "").replace(/"/g, '""')}"`,
+      `"${(a.linkedinUrl || "").replace(/"/g, '""')}"`,
+      `"${(a.cvName || "").replace(/"/g, '""')}"`,
       a.status,
       a.timestamp
     ]);
@@ -269,7 +271,7 @@ app.get("/api/signups/export", async (req, res) => {
 // Submit a job application/signup
 app.post("/api/signups", async (req, res) => {
   try {
-    const { fullName, email, roleId, experience } = req.body;
+    const { fullName, email, roleId, experience, linkedinUrl, cvName } = req.body;
     if (!fullName || !email || !roleId) {
       return res.status(400).json({ error: "Full Name, Email, and Selected Role are required." });
     }
@@ -292,6 +294,8 @@ app.post("/api/signups", async (req, res) => {
       roleId,
       roleTitle,
       experience: experience || "Interested in learning more about Aero Sales Operations.",
+      linkedinUrl: linkedinUrl || "",
+      cvName: cvName || "",
       status: "applied",
       timestamp: new Date().toISOString()
     };

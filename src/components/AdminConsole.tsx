@@ -24,7 +24,9 @@ import {
   Eye,
   Trash2,
   Sliders,
-  Sparkles
+  Sparkles,
+  Linkedin,
+  Paperclip
 } from "lucide-react";
 
 interface AdminConsoleProps {
@@ -65,9 +67,9 @@ export function AdminConsole({ onRoleAdded }: AdminConsoleProps) {
   const [formError, setFormError] = useState<string | null>(null);
 
   // Fetch all jobs, applications, and Supabase status
-  const fetchData = async () => {
+  const fetchData = async (isSilent = false) => {
     try {
-      setLoading(true);
+      if (!isSilent) setLoading(true);
       const [signupsRes, rolesRes, statusRes] = await Promise.all([
         fetch("/api/signups"),
         fetch("/api/roles"),
@@ -84,25 +86,29 @@ export function AdminConsole({ onRoleAdded }: AdminConsoleProps) {
     } catch (error) {
       console.error("Error fetching admin dashboard data:", error);
     } finally {
-      setLoading(false);
+      if (!isSilent) setLoading(false);
     }
   };
 
   useEffect(() => {
     if (isAuthenticated) {
-      fetchData();
+      fetchData(false);
+      const interval = setInterval(() => {
+        fetchData(true);
+      }, 4000);
+      return () => clearInterval(interval);
     }
   }, [isAuthenticated]);
 
   // Handle Authenticator Passcode Submit
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (passcode === "admin") {
+    if (passcode === "wonder123") {
       setIsAuthenticated(true);
       localStorage.setItem("cro_admin_authed", "true");
       setAuthError(null);
     } else {
-      setAuthError("Invalid administration key code. Try 'admin'.");
+      setAuthError("Invalid administration key code.");
     }
   };
 
@@ -278,7 +284,7 @@ export function AdminConsole({ onRoleAdded }: AdminConsoleProps) {
 
           <div className="pt-4 border-t border-slate-100 text-center">
             <p className="text-[10px] text-slate-400 font-mono">
-              💡 Demodemo? Use the access key <span className="font-semibold text-blue-600 select-all font-bold">admin</span>
+              💡 Use the access key <span className="font-semibold text-blue-600 select-all font-bold">wonder123</span>
             </p>
           </div>
         </div>
@@ -691,8 +697,28 @@ export function AdminConsole({ onRoleAdded }: AdminConsoleProps) {
                     filteredSignups.map((signup) => (
                       <tr key={signup.id} className="hover:bg-slate-50/50 transition-colors">
                         <td className="p-3 space-y-0.5">
-                          <p className="font-bold text-slate-800">{signup.fullName}</p>
-                          <p className="text-[10px] text-slate-400 font-mono">{signup.email}</p>
+                          <p className="font-bold text-slate-800 flex items-center gap-1.5">
+                            {signup.fullName}
+                            {signup.linkedinUrl && (
+                              <a 
+                                href={signup.linkedinUrl} 
+                                target="_blank" 
+                                rel="noreferrer"
+                                className="text-blue-600 hover:text-blue-850 inline-flex transition-colors"
+                                title="View LinkedIn Profile"
+                              >
+                                <Linkedin className="w-3 h-3" />
+                              </a>
+                            )}
+                          </p>
+                          <div className="flex flex-col gap-0.5 text-[10px] text-slate-400 font-mono">
+                            <span>{signup.email}</span>
+                            {signup.cvName && (
+                              <span className="flex items-center gap-1 text-slate-500 font-semibold bg-slate-100 max-w-max px-1.5 py-0.5 rounded text-[8px] mt-0.5 border border-slate-200">
+                                <Paperclip className="w-2.5 h-2.5 text-slate-400" /> {signup.cvName}
+                              </span>
+                            )}
+                          </div>
                         </td>
                         <td className="p-3">
                           <p className="font-semibold text-slate-700 leading-tight">{signup.roleTitle}</p>
@@ -746,12 +772,29 @@ export function AdminConsole({ onRoleAdded }: AdminConsoleProps) {
                 {filteredSignups.filter(s => s.experience).map(signup => (
                   <div key={signup.id} className="p-3 bg-slate-50/50 border border-slate-150 rounded-xl text-[11px] leading-relaxed text-slate-600">
                     <div className="flex justify-between items-center mb-1">
-                      <span className="font-bold text-slate-800">{signup.fullName}</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-bold text-slate-800">{signup.fullName}</span>
+                        {signup.linkedinUrl && (
+                          <a 
+                            href={signup.linkedinUrl} 
+                            target="_blank" 
+                            rel="noreferrer"
+                            className="text-blue-600 hover:text-blue-800 inline-flex transition-colors"
+                          >
+                            <Linkedin className="w-3 h-3" />
+                          </a>
+                        )}
+                      </div>
                       <span className="text-[9px] font-mono text-slate-400">{signup.roleTitle}</span>
                     </div>
                     <p className="font-light italic text-slate-600">
                       &ldquo;{signup.experience}&rdquo;
                     </p>
+                    {signup.cvName && (
+                      <div className="mt-2 flex items-center gap-1 text-[9px] font-mono font-semibold text-slate-500 bg-white max-w-max px-2 py-0.5 rounded border border-slate-250">
+                        <Paperclip className="w-3 h-3 text-slate-400 animate-pulse" /> Attached CV: {signup.cvName}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

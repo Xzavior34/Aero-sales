@@ -16,7 +16,10 @@ import {
   ChevronRight,
   ArrowLeft,
   Search,
-  Filter
+  Filter,
+  Upload,
+  Linkedin,
+  File
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -40,13 +43,17 @@ export function PilotRolesBoard({ theme, isLight, currentStyles, onSignupComplet
   const [fullName, setFullName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [experience, setExperience] = useState<string>("");
+  const [linkedinUrl, setLinkedinUrl] = useState<string>("");
+  const [cvFile, setCvFile] = useState<globalThis.File | null>(null);
+  const [cvName, setCvName] = useState<string>("");
+  const [isDragging, setIsDragging] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const fetchRoles = async () => {
+  const fetchRoles = async (isSilent = false) => {
     try {
-      setLoading(true);
+      if (!isSilent) setLoading(true);
       const res = await fetch("/api/roles");
       if (res.ok) {
         const data = await res.json();
@@ -57,12 +64,16 @@ export function PilotRolesBoard({ theme, isLight, currentStyles, onSignupComplet
     } catch (e) {
       console.error("Error fetching preview roles:", e);
     } finally {
-      setLoading(false);
+      if (!isSilent) setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchRoles();
+    fetchRoles(false);
+    const interval = setInterval(() => {
+      fetchRoles(true);
+    }, 4000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleApply = async (e: React.FormEvent) => {
@@ -83,7 +94,9 @@ export function PilotRolesBoard({ theme, isLight, currentStyles, onSignupComplet
           fullName,
           email,
           roleId: selectedRole.id,
-          experience
+          experience,
+          linkedinUrl,
+          cvName
         })
       });
 
@@ -95,6 +108,9 @@ export function PilotRolesBoard({ theme, isLight, currentStyles, onSignupComplet
       setFullName("");
       setEmail("");
       setExperience("");
+      setLinkedinUrl("");
+      setCvFile(null);
+      setCvName("");
       if (onSignupComplete) onSignupComplete();
     } catch (err: any) {
       setErrorMsg(err.message || "Failed to submit signup request.");
@@ -344,7 +360,7 @@ export function PilotRolesBoard({ theme, isLight, currentStyles, onSignupComplet
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleApply} className="space-y-4">
+                 <form onSubmit={handleApply} className="space-y-4">
                   
                   {/* Full Name */}
                   <div className="space-y-1">
@@ -374,6 +390,84 @@ export function PilotRolesBoard({ theme, isLight, currentStyles, onSignupComplet
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full text-xs p-3 rounded-xl outline-none border bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-800 transition-all"
                     />
+                  </div>
+
+                  {/* LinkedIn Profile */}
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-mono font-bold text-slate-500 uppercase flex items-center gap-1">
+                      <Linkedin className="w-3 h-3 text-blue-600" /> LinkedIn Profile URL
+                    </label>
+                    <input 
+                      type="url" 
+                      required
+                      placeholder="e.g. https://linkedin.com/in/username"
+                      value={linkedinUrl}
+                      onChange={(e) => setLinkedinUrl(e.target.value)}
+                      className="w-full text-xs p-3 rounded-xl outline-none border bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-800 transition-all"
+                    />
+                  </div>
+
+                  {/* CV/Resume File Upload Zone */}
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-mono font-bold text-slate-500 uppercase flex items-center gap-1">
+                      <Upload className="w-3 h-3 text-amber-500" /> CV / Resume Upload
+                    </label>
+                    <div
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        setIsDragging(true);
+                      }}
+                      onDragLeave={() => setIsDragging(false)}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        setIsDragging(false);
+                        const files = e.dataTransfer.files;
+                        if (files && files.length > 0) {
+                          setCvFile(files[0]);
+                          setCvName(files[0].name);
+                        }
+                      }}
+                      onClick={() => {
+                        const fileInput = document.getElementById("cv-file-input");
+                        if (fileInput) fileInput.click();
+                      }}
+                      className={`border border-dashed rounded-xl p-4 text-center cursor-pointer transition-all ${
+                        isDragging 
+                          ? "border-blue-500 bg-blue-50/50" 
+                          : cvName 
+                            ? "border-emerald-300 bg-emerald-50/20" 
+                            : "border-slate-300 hover:border-slate-400 hover:bg-slate-50"
+                      }`}
+                    >
+                      <input
+                        id="cv-file-input"
+                        type="file"
+                        accept=".pdf,.doc,.docx,.rtf,.txt"
+                        className="hidden"
+                        onChange={(e) => {
+                          const files = e.target.files;
+                          if (files && files.length > 0) {
+                            setCvFile(files[0]);
+                            setCvName(files[0].name);
+                          }
+                        }}
+                      />
+                      {cvName ? (
+                        <div className="flex items-center justify-center gap-2">
+                          <File className="w-4 h-4 text-emerald-600" />
+                          <div className="text-left">
+                            <p className="text-xs font-semibold text-slate-800 line-clamp-1">{cvName}</p>
+                            <p className="text-[9px] text-slate-400">Drag another file or click to replace</p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="space-y-1">
+                          <Upload className="w-5 h-5 text-slate-400 mx-auto" />
+                          <p className="text-xs text-slate-600 font-medium">Drag & drop your CV here, or <span className="text-blue-600 font-bold">browse</span></p>
+                          <p className="text-[9px] text-slate-400">Supports PDF, DOCX, DOC, TXT (Max 10MB)</p>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* Statement */}
