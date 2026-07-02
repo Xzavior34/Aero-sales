@@ -115,6 +115,8 @@ export default function App() {
   // Playground / Sandbox states
   const [activePreset, setActivePreset] = useState<string>("aether");
   const [landingPageData, setLandingPageData] = useState<LandingPageData>(TEMPLATES.aether);
+  const [comparisonData, setComparisonData] = useState<LandingPageData | null>(null);
+  const [isShowingComparison, setIsShowingComparison] = useState<boolean>(false);
   const [selectedTheme, setSelectedTheme] = useState<AestheticTheme>("obsidian_noir");
   const [activeView, setActiveView] = useState<"showcase" | "heatmap">("showcase");
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
@@ -125,6 +127,12 @@ export default function App() {
   const [productHook, setProductHook] = useState<string>("");
   const [targetAudience, setTargetAudience] = useState<string>("");
   const [conversionGoal, setConversionGoal] = useState<string>("Direct SaaS Subscription");
+
+  // Input Validation helpers
+  const isProductNameTooShort = productName.length > 0 && productName.length < 3;
+  const isProductHookTooShort = productHook.length > 0 && productHook.length < 12;
+  const isTargetAudienceTooShort = targetAudience.length > 0 && targetAudience.length < 5;
+  const isFormInvalid = isProductNameTooShort || isProductHookTooShort || isTargetAudienceTooShort || !productName.trim();
 
   // Traffic Simulator States
   const [simState, setSimState] = useState<"idle" | "running" | "completed">("idle");
@@ -177,7 +185,9 @@ export default function App() {
       }
 
       const generatedData: LandingPageData = await response.json();
+      setComparisonData(landingPageData);
       setLandingPageData(generatedData);
+      setIsShowingComparison(false);
       setActivePreset("custom");
     } catch (err: any) {
       console.error(err);
@@ -511,8 +521,21 @@ export default function App() {
                           placeholder="e.g. Vesper DB"
                           value={productName}
                           onChange={(e) => setProductName(e.target.value)}
-                          className="w-full bg-white border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs text-slate-800 p-2.5 rounded-xl outline-none transition-all shadow-3xs"
+                          className={`w-full bg-white border text-xs text-slate-800 p-2.5 rounded-xl outline-none transition-all shadow-3xs ${
+                            isProductNameTooShort 
+                              ? "border-rose-400 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 bg-rose-50/10" 
+                              : "border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                          }`}
                         />
+                        {isProductNameTooShort ? (
+                          <p className="text-[9px] text-rose-500 font-mono flex items-center gap-1 animate-fadeIn">
+                            <AlertTriangle className="w-2.5 h-2.5" /> character count too low ({productName.length}/3)
+                          </p>
+                        ) : (
+                          <p className="text-[8.5px] text-slate-400 font-mono">
+                            Minimum 3 characters required.
+                          </p>
+                        )}
                       </div>
 
                       <div className="space-y-1">
@@ -524,8 +547,21 @@ export default function App() {
                           value={productHook}
                           onChange={(e) => setProductHook(e.target.value)}
                           rows={2}
-                          className="w-full bg-white border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs text-slate-800 p-2.5 rounded-xl outline-none transition-all resize-none font-light leading-relaxed shadow-3xs"
+                          className={`w-full bg-white border text-xs text-slate-800 p-2.5 rounded-xl outline-none transition-all resize-none font-light leading-relaxed shadow-3xs ${
+                            isProductHookTooShort 
+                              ? "border-rose-400 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 bg-rose-50/10" 
+                              : "border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                          }`}
                         />
+                        {isProductHookTooShort ? (
+                          <p className="text-[9px] text-rose-500 font-mono flex items-center gap-1 animate-fadeIn">
+                            <AlertTriangle className="w-2.5 h-2.5" /> character count too low ({productHook.length}/12)
+                          </p>
+                        ) : (
+                          <p className="text-[8.5px] text-slate-400 font-mono">
+                            Minimum 12 characters. Help Gemini capture your product's edge.
+                          </p>
+                        )}
                       </div>
 
                       <div className="space-y-1">
@@ -537,8 +573,21 @@ export default function App() {
                           placeholder="e.g. FinTech CTOs & Chief Security Officers"
                           value={targetAudience}
                           onChange={(e) => setTargetAudience(e.target.value)}
-                          className="w-full bg-white border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs text-slate-800 p-2.5 rounded-xl outline-none transition-all font-light shadow-3xs"
+                          className={`w-full bg-white border text-xs text-slate-800 p-2.5 rounded-xl outline-none transition-all font-light shadow-3xs ${
+                            isTargetAudienceTooShort 
+                              ? "border-rose-400 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 bg-rose-50/10" 
+                              : "border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                          }`}
                         />
+                        {isTargetAudienceTooShort ? (
+                          <p className="text-[9px] text-rose-500 font-mono flex items-center gap-1 animate-fadeIn">
+                            <AlertTriangle className="w-2.5 h-2.5" /> character count too low ({targetAudience.length}/5)
+                          </p>
+                        ) : (
+                          <p className="text-[8.5px] text-slate-400 font-mono">
+                            Minimum 5 characters. E.g. Outbound marketing directors.
+                          </p>
+                        )}
                       </div>
 
                       <div className="space-y-1">
@@ -578,8 +627,8 @@ export default function App() {
 
                       <button
                         type="submit"
-                        disabled={isGenerating}
-                        className="w-full py-2.5 rounded-xl bg-slate-950 text-white font-mono font-bold text-[10px] uppercase flex items-center justify-center gap-1.5 hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-xs transition-all"
+                        disabled={isGenerating || isFormInvalid}
+                        className="w-full py-2.5 rounded-xl bg-slate-950 text-white font-mono font-bold text-[10px] uppercase flex items-center justify-center gap-1.5 hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-xs transition-all"
                       >
                         {isGenerating ? (
                           <>
@@ -633,6 +682,62 @@ export default function App() {
                       </div>
                     </div>
 
+                    {/* SVG Radial Progress Gauge for Conversion Confidence */}
+                    {(() => {
+                      const conversionRateVal = landingPageData.conversionInsights.predictedConversionRate || 4.2;
+                      const progressFraction = simVisitors / 5000;
+                      const peakConfidence = Math.min(99, Math.round(75 + conversionRateVal * 4.5));
+                      const currentConfidence = simState === "idle" ? 0 : Math.round(peakConfidence * progressFraction);
+                      return (
+                        <div className="flex items-center gap-4 bg-white border border-slate-150 p-3 rounded-xl shadow-3xs">
+                          {/* SVG Radial Gauge */}
+                          <div className="relative w-14 h-14 shrink-0 flex items-center justify-center">
+                            <svg className="w-full h-full transform -rotate-90">
+                              {/* Background Circle */}
+                              <circle
+                                cx="28"
+                                cy="28"
+                                r="22"
+                                className="stroke-slate-100"
+                                strokeWidth="4"
+                                fill="transparent"
+                              />
+                              {/* Animated Foreground Circle */}
+                              <motion.circle
+                                cx="28"
+                                cy="28"
+                                r="22"
+                                className="stroke-blue-600"
+                                strokeWidth="4"
+                                fill="transparent"
+                                strokeDasharray={2 * Math.PI * 22}
+                                animate={{ strokeDashoffset: (2 * Math.PI * 22) * (1 - currentConfidence / 100) }}
+                                transition={{ duration: 0.1, ease: "easeOut" }}
+                                strokeLinecap="round"
+                              />
+                            </svg>
+                            <div className="absolute inset-0 flex items-center justify-center font-mono">
+                              <span className="text-[11px] font-black text-slate-800">{currentConfidence}%</span>
+                            </div>
+                          </div>
+
+                          <div className="flex-grow space-y-1">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">CONFIDENCE SCORE</span>
+                              <span className="text-[8px] font-mono font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
+                                {simState === "idle" ? "READY" : simState === "running" ? "STABILIZING" : "HIGH ACCURACY"}
+                              </span>
+                            </div>
+                            <p className="text-[10px] text-slate-500 font-light leading-snug">
+                              {simState === "idle" && "Initiate real-time stream simulation to compute confidence metrics."}
+                              {simState === "running" && `Telemetry active: ${simVisitors.toLocaleString()} user samples.`}
+                              {simState === "completed" && "Predictability confidence analysis finalized."}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })()}
+
                     {/* Progress bars & Action */}
                     <div className="space-y-3 font-mono text-[10.5px] pt-1">
                       <div className="flex justify-between items-center text-[9px] text-slate-500 bg-white border border-slate-150 p-2.5 rounded-xl">
@@ -661,6 +766,97 @@ export default function App() {
                         </div>
                       )}
                     </div>
+
+                    {/* Visceral Checkmark Success Feedback Banner */}
+                    <AnimatePresence>
+                      {simState === "completed" && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="p-3.5 bg-emerald-50 border border-emerald-100 rounded-xl flex items-start gap-3 text-xs text-emerald-800"
+                        >
+                          <div className="bg-emerald-500 text-white rounded-full p-1.5 shadow-sm flex items-center justify-center shrink-0 mt-0.5">
+                            <motion.svg
+                              className="w-4 h-4 text-white stroke-current"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={3.5}
+                            >
+                              <motion.path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M5 13l4 4L19 7"
+                                initial={{ pathLength: 0 }}
+                                animate={{ pathLength: 1 }}
+                                transition={{ duration: 0.6, ease: "easeOut" }}
+                              />
+                            </motion.svg>
+                          </div>
+                          <div>
+                            <p className="font-extrabold text-[10px] tracking-wider uppercase text-emerald-950">Simulation Successful</p>
+                            <p className="text-[11.5px] leading-relaxed font-light text-emerald-700 mt-0.5">
+                              Telemetry successfully logged 5,000 requests. Form actions finalized with <strong className="font-semibold text-emerald-900">{landingPageData.conversionInsights.predictedConversionRate}% conversion predictability</strong>.
+                            </p>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* Side-by-Side Comparison Module */}
+                  <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-3 shadow-2xs">
+                    <div className="flex justify-between items-center pb-2 border-b border-slate-200">
+                      <h3 className="text-[11px] font-mono font-bold text-slate-700 flex items-center gap-1.5 uppercase">
+                        <Layers className="w-3.5 h-3.5 text-blue-600 animate-pulse" />
+                        STEP 3.5: SNAPSHOT A/B COMPARE
+                      </h3>
+                      {comparisonData && (
+                        <span className="text-[8px] font-mono font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded">
+                          SNAP ACTIVE
+                        </span>
+                      )}
+                    </div>
+                    
+                    <p className="text-[10px] text-slate-400 leading-normal font-light">
+                      Snapshot current copywriting to run A/B copy experiments or toggle between your baseline blueprint and Gemini-generated output.
+                    </p>
+
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          setComparisonData(landingPageData);
+                          setIsShowingComparison(false);
+                        }}
+                        className="flex-1 py-2 text-[9px] font-mono font-bold uppercase rounded-xl border border-slate-250 bg-white text-slate-700 hover:bg-slate-50 transition-all flex items-center justify-center gap-1 cursor-pointer"
+                      >
+                        📸 Take Snapshot
+                      </button>
+
+                      {comparisonData && (
+                        <button
+                          onClick={() => setIsShowingComparison(!isShowingComparison)}
+                          className={`flex-1 py-2 text-[9px] font-mono font-bold uppercase rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                            isShowingComparison 
+                              ? "bg-blue-600 text-white shadow-xs border border-blue-500" 
+                              : "bg-slate-900 text-white shadow-xs"
+                          }`}
+                        >
+                          {isShowingComparison ? "👉 View Optimized" : "👈 View Snapshot"}
+                        </button>
+                      )}
+                    </div>
+
+                    {comparisonData && (
+                      <div className="text-[9px] bg-amber-50 border border-amber-100/60 p-2.5 rounded-xl font-mono text-slate-600 leading-relaxed">
+                        {isShowingComparison ? (
+                          <span className="text-amber-700 font-bold">⚠️ Displaying Snapshot:</span>
+                        ) : (
+                          <span className="text-blue-700 font-bold">✨ Displaying Active Copy:</span>
+                        )}{" "}
+                        {isShowingComparison ? comparisonData.productName : landingPageData.productName}
+                      </div>
+                    )}
                   </div>
 
                   {/* Section 4: Deep Conversion Insights Teardown */}
@@ -669,8 +865,8 @@ export default function App() {
                       STEP 4: COGNITIVE PERSUASION ANALYSIS
                     </h2>
                     <ConversionInsightsPanel 
-                      insights={landingPageData.conversionInsights} 
-                      productName={landingPageData.productName} 
+                      insights={isShowingComparison && comparisonData ? comparisonData.conversionInsights : landingPageData.conversionInsights} 
+                      productName={isShowingComparison && comparisonData ? comparisonData.productName : landingPageData.productName} 
                     />
                   </div>
 
@@ -727,7 +923,7 @@ export default function App() {
                   {/* Aesthetic Preview Canvas Wrapper */}
                   <div className="flex-1 w-full bg-white rounded-3xl border border-slate-200 shadow-xl overflow-y-auto overflow-x-hidden relative scrollbar-thin">
                     <AestheticPreview 
-                      data={landingPageData} 
+                      data={isShowingComparison && comparisonData ? comparisonData : landingPageData} 
                       theme={selectedTheme} 
                       isHeatmapVisible={activeView === "heatmap"} 
                     />
