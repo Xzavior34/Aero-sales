@@ -63,6 +63,55 @@ export default function App() {
     return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
+  // Automatically close mobile navigation menu when a user clicks an external link or performs smooth scroll navigation
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const handleGlobalClick = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      
+      // 1. Check if clicked element is an external link or has an anchor link that triggers smooth scroll
+      const anchor = target.closest("a");
+      if (anchor) {
+        const href = anchor.getAttribute("href") || "";
+        const isExternal = href.startsWith("http") || href.startsWith("https") || anchor.target === "_blank";
+        const isSmoothScroll = href.startsWith("#") || anchor.classList.contains("smooth-scroll");
+        
+        if (isExternal || isSmoothScroll) {
+          setMobileMenuOpen(false);
+          return;
+        }
+      }
+
+      // 2. Check if clicked element is a button or other element triggering smooth scroll or navigation action
+      const button = target.closest("button");
+      if (button) {
+        const onClickText = button.outerHTML || "";
+        const triggersScroll = onClickText.includes("scrollTo") || onClickText.includes("scrollIntoView") || button.classList.contains("smooth-scroll");
+        if (triggersScroll) {
+          setMobileMenuOpen(false);
+        }
+      }
+    };
+
+    // 3. Listen to scroll events on window to detect smooth scroll navigation or manual scrolling
+    let initialScrollY = window.scrollY;
+    const handleGlobalScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (Math.abs(currentScrollY - initialScrollY) > 8) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleGlobalClick, { capture: true });
+    window.addEventListener("scroll", handleGlobalScroll, { passive: true });
+
+    return () => {
+      document.removeEventListener("click", handleGlobalClick, { capture: true });
+      window.removeEventListener("scroll", handleGlobalScroll);
+    };
+  }, [mobileMenuOpen]);
+
   // Playground / Sandbox states
   const [activePreset, setActivePreset] = useState<string>("aether");
   const [landingPageData, setLandingPageData] = useState<LandingPageData>(TEMPLATES.aether);
@@ -314,6 +363,30 @@ export default function App() {
               >
                 POLICIES
               </button>
+              
+              {/* External and Smooth Scroll Links for demonstrative self-explanatory UX */}
+              <div className="pt-2 border-t border-slate-100 space-y-3">
+                <span className="text-[9px] font-mono text-slate-400 font-bold uppercase tracking-wider block">DEMO & UTILITIES</span>
+                
+                <a 
+                  href="https://google.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="block text-xs font-mono font-bold w-full text-left py-1 text-blue-600 hover:text-blue-800 flex items-center gap-1.5"
+                >
+                  EXTERNAL GOOGLE DOCS ↗ <span className="text-[9px] font-light text-slate-400">(Closes Menu)</span>
+                </a>
+
+                <button 
+                  onClick={() => {
+                    document.getElementById("footer")?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                  className="block text-xs font-mono font-bold w-full text-left py-1 text-amber-600 hover:text-amber-800 flex items-center gap-1.5 smooth-scroll"
+                >
+                  SMOOTH SCROLL TO FOOTER ↓ <span className="text-[9px] font-light text-slate-400">(Closes Menu)</span>
+                </button>
+              </div>
+
               <button 
                 onClick={() => handleNavigate("audit")}
                 className="w-full text-xs font-mono font-bold text-center py-3 bg-slate-900 text-white rounded-xl uppercase block"
@@ -661,7 +734,7 @@ export default function App() {
       </main>
 
       {/* 3. Global Footer */}
-      <footer className="bg-slate-950 text-slate-400 py-12 border-t border-slate-900 shrink-0">
+      <footer id="footer" className="bg-slate-950 text-slate-400 py-12 border-t border-slate-900 shrink-0">
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
           
           <div className="md:col-span-5 space-y-4">
