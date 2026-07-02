@@ -32,7 +32,8 @@ import {
   ShieldCheck,
   Calculator,
   Briefcase,
-  Layers
+  Layers,
+  WifiOff
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -119,7 +120,42 @@ export default function App() {
   const [landingPageData, setLandingPageData] = useState<LandingPageData>(TEMPLATES.aether);
   const [comparisonData, setComparisonData] = useState<LandingPageData | null>(null);
   const [isShowingComparison, setIsShowingComparison] = useState<boolean>(false);
-  const [selectedTheme, setSelectedTheme] = useState<AestheticTheme>("obsidian_noir");
+  
+  // Persistent 'AestheticTheme' state matching user requirements
+  const [selectedTheme, setSelectedTheme] = useState<AestheticTheme>(() => {
+    try {
+      const saved = localStorage.getItem("AestheticTheme");
+      if (saved) return saved as AestheticTheme;
+    } catch (e) {
+      console.error("Error reading AestheticTheme from localStorage:", e);
+    }
+    return "obsidian_noir";
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("AestheticTheme", selectedTheme);
+    } catch (e) {
+      console.error("Error writing AestheticTheme to localStorage:", e);
+    }
+  }, [selectedTheme]);
+
+  // Offline status tracking state
+  const [isOnline, setIsOnline] = useState<boolean>(() => typeof navigator !== "undefined" ? navigator.onLine : true);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
   const [activeView, setActiveView] = useState<"showcase" | "heatmap">("showcase");
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -242,6 +278,24 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans flex flex-col justify-between">
       
+      {/* Offline Status Warning Fallback Banner */}
+      <AnimatePresence>
+        {!isOnline && (
+          <motion.div
+            id="offline-fallback-banner"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="bg-amber-500 text-slate-950 px-6 py-3 text-xs font-mono font-bold flex items-center justify-center gap-2 border-b border-amber-600 shadow-sm relative z-[100] text-center"
+          >
+            <div className="flex items-center gap-2 justify-center">
+              <WifiOff className="w-4 h-4 text-slate-950 animate-pulse" />
+              <span>Offline Mode Active • Sourced representative pipeline and analytics are fully cached for offline availability.</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* 1. Header / Navigation Bar */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -434,38 +488,67 @@ export default function App() {
 
                 {/* Segmented Diagnostic Tabs */}
                 <div className="flex justify-center mb-8">
-                  <div className="inline-flex bg-slate-100 p-1 rounded-2xl border border-slate-200/60 shadow-3xs">
+                  <div className="inline-flex bg-slate-100 p-1 rounded-2xl border border-slate-200/60 shadow-3xs relative">
                     <button
+                      id="tab-roi-trigger"
                       onClick={() => setAuditTab("roi")}
-                      className={`px-5 py-2 rounded-xl font-mono text-[9.5px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                      className={`px-5 py-2 rounded-xl font-mono text-[9.5px] font-bold uppercase tracking-wider transition-all cursor-pointer relative z-10 ${
                         auditTab === "roi"
-                          ? "bg-slate-900 text-amber-400 shadow-xs"
-                          : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
+                          ? "text-amber-400 font-extrabold"
+                          : "text-slate-500 hover:text-slate-900"
                       }`}
                     >
                       📈 Outbound ROI Lift
+                      {auditTab === "roi" && (
+                        <motion.div
+                          id="active-tab-indicator-roi"
+                          layoutId="activeDiagnosticTab"
+                          className="absolute inset-0 bg-slate-900 rounded-xl -z-10 shadow-xs"
+                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                        />
+                      )}
                     </button>
                     <button
+                      id="tab-leak-trigger"
                       onClick={() => setAuditTab("leak")}
-                      className={`px-5 py-2 rounded-xl font-mono text-[9.5px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                      className={`px-5 py-2 rounded-xl font-mono text-[9.5px] font-bold uppercase tracking-wider transition-all cursor-pointer relative z-10 ${
                         auditTab === "leak"
-                          ? "bg-slate-900 text-blue-400 shadow-xs"
-                          : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
+                          ? "text-blue-400 font-extrabold"
+                          : "text-slate-500 hover:text-slate-900"
                       }`}
                     >
                       💰 Revenue Leak Auditor
+                      {auditTab === "leak" && (
+                        <motion.div
+                          id="active-tab-indicator-leak"
+                          layoutId="activeDiagnosticTab"
+                          className="absolute inset-0 bg-slate-900 rounded-xl -z-10 shadow-xs"
+                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                        />
+                      )}
                     </button>
                   </div>
                 </div>
 
-                <div className="transition-all duration-300">
-                  {auditTab === "roi" ? (
-                    <FloatingRoiCalculator isInline={true} onNavigate={handleNavigate} />
-                  ) : (
-                    <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-10 shadow-xs">
-                      <ConversionCalculator config={landingPageData.calculator} theme={selectedTheme} />
-                    </div>
-                  )}
+                <div className="overflow-hidden">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      id="audit-panel-animation-wrapper"
+                      key={auditTab}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -12 }}
+                      transition={{ duration: 0.25, ease: "easeInOut" }}
+                    >
+                      {auditTab === "roi" ? (
+                        <FloatingRoiCalculator isInline={true} onNavigate={handleNavigate} />
+                      ) : (
+                        <div id="revenue-leak-audit-wrapper" className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-10 shadow-xs">
+                          <ConversionCalculator config={landingPageData.calculator} theme={selectedTheme} />
+                        </div>
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
               </div>
             )}            {currentPage === "sandbox" && (
